@@ -1,0 +1,26 @@
+This project is built with Node.js and React.js. The database used is SQLite. To run this project, you need to install SQLite and place the task.db file in it. Also, remember to change the dbPath in /server/db/db.ts to your own path.
+
+Installation
+To run the project locally, follow these steps:
+
+Make sure Node.js is installed on your system. If not, you can download and install it from the official Node.js website.
+
+Install SQLite if you haven't already. Instructions for installation can be found on the official SQLite website.
+
+Running the Project
+After completing the installation, you can run the project. To do so, follow these commands:
+
+Install project dependencies:
+
+npm install
+Start the development mode:
+
+npm start
+Open your web browser and navigate to http://localhost:4000 to view the project.
+
+Contributors
+John Paul Doctolero
+License
+This project is licensed under the Apache License - see the LICENSE file for details.
+
+Feel free to customize the content as per your project's requirements and add any additional details that might be relevant.
