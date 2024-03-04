@@ -25,7 +25,12 @@ app.use(express_1.default.json());
 app.use((0, express_session_1.default)({
     secret: 'geheimesGeheimnis',
     resave: false,
-    saveUninitialized: false // Legt fest, ob eine "leere" Sitzung auch dann gespeichert wird, wenn sie nicht modifiziert wurde
+    saveUninitialized: false,
+    cookie: {
+        path: '/',
+        httpOnly: false,
+        maxAge: 24 * 60 * 60 * 1000
+    },
 }));
 app.use(usersRoute_1.default);
 app.use(loginRoute_1.default);
