@@ -31,13 +31,13 @@ app.use(express.json());
 // Session-Middleware konfigurieren
 app.use(session({
     secret: 'geheimesGeheimnis', // Geheimnis zur Signierung von Session-Cookies
-    resave: false, 
-    saveUninitialized: true, // Legt fest, ob eine "leere" Sitzung auch dann gespeichert wird, wenn sie nicht modifiziert wurde
-    cookie: {
-        path    : '/',
+    resave: false,
+    saveUninitialized: false, // Legt fest, ob eine "leere" Sitzung auch dann gespeichert wird, wenn sie nicht modifiziert wurde
+  /*   cookie: {
+        path: '/',
         httpOnly: false,
-        maxAge  : 24*60*60*1000
-      },
+        maxAge: 24 * 60 * 60 * 1000
+    }, */
 }));
 
 app.use(passport.initialize());
@@ -51,45 +51,26 @@ interface UserRow {
     password: string;
 }
 
-passport.use(new BasicStrategy(
-    function (username, password, done) {
-        db.get('SELECT * FROM users WHERE username = ?', [username], (err, row: UserRow) => {
-            if (err) { return done(err); }
-            if (!row) {
-                return done(null, false, { message: 'Incorrect username.' });
-            }
-            bcrypt.compare(password, row.password, (error, result) => {
-                if (error) { return done(error); }
-                if (result) {
-                    return done(null, row);
-                } else {
-                    return done(null, false, { message: 'Incorrect password.' });
-                }
-            });
-        });
-    }
-));
-
-
-
-passport.serializeUser(function (user: any, done) {
-    done(null, user.id);
-});
-
-passport.deserializeUser(function (id, done) {
-    db.get('SELECT * FROM users WHERE id = ?', [id], (err, row) => {
-        if (err) { return done(err); }
-        done(null, row);
-    });
-});
 
 app.use(userRouter);
+
 app.use(loginRouter);
+
 app.use(taskRouter);
 
 app.get('/', (req: Request, res: Response) => {
     res.send('Express + TypeScript Server');
     testSequelize();
+});
+
+app.get('/secrets', (req: Request, res: Response) => {
+    console.log("here is the authentificated user: " + req.user);
+
+    if (req.isAuthenticated())
+        res.send(req.user)
+    else
+        res.send("not authorized")
+
 });
 
 async function testSequelize() {
@@ -100,6 +81,50 @@ async function testSequelize() {
         console.error('Unable to connect to the database:', error);
     }
 }
+
+passport.use(new BasicStrategy(
+    function (username, password, done) {
+        db.get('SELECT * FROM users WHERE username = ?', [username], (err, row: UserRow) => {
+
+            const user = row;
+            const storedHashedPassword = row.password;
+
+            if (err) { return done(err); }
+            if (!row) {
+                return done(null, false, { message: 'Incorrect username.' });
+            }
+            bcrypt.compare(password, row.password, (error, result) => {
+                if (error) { return done(error); }
+                if (result) {
+                    return done(null, user);
+                } else {
+                    return done(null, false, { message: 'Incorrect password.' });
+                }
+            });
+        });
+    }
+));
+/* 
+passport.serializeUser(function (user: UserRow, done) {
+    console.log("serialize")
+    done(null, user.id); // Nur die ID des Benutzers in der Session speichern
+});
+
+passport.deserializeUser(function (id, done) {
+    console.log('Deserialize User called with id:', id);
+    db.get('SELECT * FROM users WHERE id = ?', [id], (err, row: UserRow) => {
+        if (err) { 
+            console.error('Error while deserializing user:', err);
+            return done(err); 
+        }
+        if (!row) { 
+            console.error('User not found with id:', id);
+            return done(null, false); 
+        }
+        console.log('User deserialized:', row);
+        done(null, row); // Benutzer erfolgreich geladen
+    });
+}); */
 
 app.listen(port, () => {
     console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
