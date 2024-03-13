@@ -33,11 +33,11 @@ app.use(session({
     secret: 'geheimesGeheimnis', // Geheimnis zur Signierung von Session-Cookies
     resave: false,
     saveUninitialized: false, // Legt fest, ob eine "leere" Sitzung auch dann gespeichert wird, wenn sie nicht modifiziert wurde
-  /*   cookie: {
-        path: '/',
-        httpOnly: false,
-        maxAge: 24 * 60 * 60 * 1000
-    }, */
+    /*   cookie: {
+          path: '/',
+          httpOnly: false,
+          maxAge: 24 * 60 * 60 * 1000
+      }, */
 }));
 
 app.use(passport.initialize());
@@ -63,11 +63,11 @@ app.get('/', (req: Request, res: Response) => {
     testSequelize();
 });
 
-app.get('/secrets', (req: Request, res: Response) => {
-    console.log("here is the authentificated user: " + req.user);
+app.get('/secrets',  passport.authenticate('basic', { session: true }), (req: Request, res: Response) => {
+    console.log("here is the authentificated user: " + JSON.stringify(req.user));
 
     if (req.isAuthenticated())
-        res.send(req.user)
+        res.send(JSON.stringify(req.user))  
     else
         res.send("not authorized")
 
@@ -104,27 +104,27 @@ passport.use(new BasicStrategy(
         });
     }
 ));
-/* 
+
 passport.serializeUser(function (user: UserRow, done) {
-    console.log("serialize")
-    done(null, user.id); // Nur die ID des Benutzers in der Session speichern
+    console.log("serialize: " + JSON.stringify(user))
+    done(null, user); // Nur die ID des Benutzers in der Session speichern
 });
 
 passport.deserializeUser(function (id, done) {
     console.log('Deserialize User called with id:', id);
     db.get('SELECT * FROM users WHERE id = ?', [id], (err, row: UserRow) => {
-        if (err) { 
+        if (err) {
             console.error('Error while deserializing user:', err);
-            return done(err); 
+            return done(err);
         }
-        if (!row) { 
+        if (!row) {
             console.error('User not found with id:', id);
-            return done(null, false); 
+            return done(null, false);
         }
         console.log('User deserialized:', row);
         done(null, row); // Benutzer erfolgreich geladen
     });
-}); */
+});
 
 app.listen(port, () => {
     console.log(`⚡️[server]: Server is running at http://localhost:${port}`);

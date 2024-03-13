@@ -45,10 +45,10 @@ app.get('/', (req, res) => {
     res.send('Express + TypeScript Server');
     testSequelize();
 });
-app.get('/secrets', (req, res) => {
-    console.log("here is the authentificated user: " + req.user);
+app.get('/secrets', passport_1.default.authenticate('basic', { session: true }), (req, res) => {
+    console.log("here is the authentificated user: " + JSON.stringify(req.user));
     if (req.isAuthenticated())
-        res.send(req.user);
+        res.send(JSON.stringify(req.user));
     else
         res.send("not authorized");
 });
@@ -84,15 +84,13 @@ passport_1.default.use(new passport_http_1.BasicStrategy(function (username, pas
         });
     });
 }));
-/*
-passport.serializeUser(function (user: UserRow, done) {
-    console.log("serialize")
-    done(null, user.id); // Nur die ID des Benutzers in der Session speichern
+passport_1.default.serializeUser(function (user, done) {
+    console.log("serialize: " + JSON.stringify(user));
+    done(null, user); // Nur die ID des Benutzers in der Session speichern
 });
-
-passport.deserializeUser(function (id, done) {
+passport_1.default.deserializeUser(function (id, done) {
     console.log('Deserialize User called with id:', id);
-    db.get('SELECT * FROM users WHERE id = ?', [id], (err, row: UserRow) => {
+    db_2.db.get('SELECT * FROM users WHERE id = ?', [id], (err, row) => {
         if (err) {
             console.error('Error while deserializing user:', err);
             return done(err);
@@ -104,7 +102,7 @@ passport.deserializeUser(function (id, done) {
         console.log('User deserialized:', row);
         done(null, row); // Benutzer erfolgreich geladen
     });
-}); */
+});
 app.listen(port, () => {
     console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
 });

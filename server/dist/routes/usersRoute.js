@@ -5,13 +5,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const userController_1 = require("../controllers/userController");
+const passport_1 = __importDefault(require("passport"));
 const userRouter = express_1.default.Router();
+// Middleware für Passport-Authentifizierung
+const authenticate = passport_1.default.authenticate('basic', { session: true });
 userRouter.route("/users")
-    .get(userController_1.getUsers)
+    .get(authenticate, userController_1.getUsers)
     .post(userController_1.postUser);
 //----------------------- Requests Targetting A Specific User/////////////////////////////////////////////////
 userRouter.route("/users/:id")
-    .get(userController_1.getUser)
-    .put(userController_1.putUser)
-    .delete(userController_1.deleteUser);
+    .get(authenticate, userController_1.getUser)
+    .put(authenticate, userController_1.putUser)
+    .delete(authenticate, userController_1.deleteUser);
 exports.default = userRouter;

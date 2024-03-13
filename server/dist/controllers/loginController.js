@@ -17,16 +17,8 @@ function login(req, res, next) {
             if (err) {
                 return next(err);
             }
-            return res.status(200).json({ message: 'Erfolgreich angemeldet', user: req.user });
+            return res.status(200).json({ message: 'Erfolgreich angemeldet..', user: req.user });
         });
     })(req, res, next);
-    passport_1.default.serializeUser((user, cb) => {
-        console.log("serialize: " + user.username);
-        cb(null, user.id);
-    });
-    passport_1.default.deserializeUser((user, cb) => {
-        console.log("deserialize: " + user);
-        cb(null, user);
-    });
 }
 exports.login = login;
