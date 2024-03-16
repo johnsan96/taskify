@@ -9,6 +9,7 @@ const body_parser_1 = __importDefault(require("body-parser"));
 const usersRoute_1 = __importDefault(require("./routes/usersRoute"));
 const taskRoute_1 = __importDefault(require("./routes/taskRoute"));
 const loginRoute_1 = __importDefault(require("./routes/loginRoute"));
+const taskAssignee_1 = __importDefault(require("./routes/taskAssignee"));
 const cors_1 = __importDefault(require("cors"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const db_1 = require("./db/db");
@@ -41,6 +42,7 @@ app.use(passport_1.default.session());
 app.use(usersRoute_1.default);
 app.use(loginRoute_1.default);
 app.use(taskRoute_1.default);
+app.use(taskAssignee_1.default);
 app.get('/', (req, res) => {
     res.send('Express + TypeScript Server');
     testSequelize();

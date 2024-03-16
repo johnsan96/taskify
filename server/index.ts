@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import userRouter from './routes/usersRoute'
 import taskRouter from './routes/taskRoute';
 import loginRouter from './routes/loginRoute';
+import taskAssigneeRouter from './routes/taskAssignee';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { sequelize } from './db/db'
@@ -51,12 +52,13 @@ interface UserRow {
     password: string;
 }
 
-
 app.use(userRouter);
 
 app.use(loginRouter);
 
 app.use(taskRouter);
+
+app.use(taskAssigneeRouter);
 
 app.get('/', (req: Request, res: Response) => {
     res.send('Express + TypeScript Server');

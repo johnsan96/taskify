@@ -14,4 +14,8 @@ curl -X DELETE http://localhost:4000/tasks/<task_id>
 
 curl -X POST \
   http://localhost:4000/login \
-  -H 'Authorization: Basic bWF4OjEyMw==
+  -H 'Authorization: Basic bWF4OjEyMw=='
+
+curl -X POST -H "Content-Type: application/json" -d '{"task_id": 123, "user_id": 456}' http://localhost:4000/task_assignees
+
+curl -X GET http://localhost:4000/task_assignees
