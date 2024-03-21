@@ -1,8 +1,15 @@
+---------------------------------------------- Login ---------------------------------------------------------------------------
+
 curl -X POST \
   -H "Content-Type: application/json" \
   -d '{"username": "max", "password": "123"}' \
   http://localhost:4000/login
 
+curl -X POST \
+  http://localhost:4000/login \
+  -H 'Authorization: Basic bWF4OjEyMw=='
+
+---------------------------------------------- Tasks ---------------------------------------------------------------------------
 
 curl -X GET http://localhost:4000/tasks
 
@@ -12,10 +19,28 @@ curl -X PUT -H "Content-Type: application/json" -d '{"name": "Aktualisierter Nam
 
 curl -X DELETE http://localhost:4000/tasks/<task_id>
 
-curl -X POST \
-  http://localhost:4000/login \
-  -H 'Authorization: Basic bWF4OjEyMw=='
+---------------------------------------------- Task Assignees ---------------------------------------------------------------------------
 
 curl -X POST -H "Content-Type: application/json" -d '{"task_id": 123, "user_id": 456}' http://localhost:4000/task_assignees
 
 curl -X GET http://localhost:4000/task_assignees
+
+---------------------------------------------- Project Task ---------------------------------------------------------------------------
+
+curl http://localhost:4000/projectTasks
+
+curl -X POST -H "Content-Type: application/json" -d '{"project_id": 1, "task_id": 3}' http://localhost:4000/projectTasks
+
+---------------------------------------------- Projec Users ---------------------------------------------------------------------------
+
+curl http://localhost:4000/projectUsers
+
+curl -X POST -H "Content-Type: application/json" -d '{"project_id": 1, "user_id": 3}' http://localhost:4000/projectUsers
+
+---------------------------------------------- Projects ---------------------------------------------------------------------------
+
+curl http://localhost:4000/projects
+
+curl -X POST -H "Content-Type: application/json" -d '{"name": "Neues Projekt", "description": "Beschreibung des neuen Projekts"}' http://localhost:4000/projects
+
+curl http://localhost:4000/project/1

@@ -1,133 +1,94 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import "../App.css";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useLocation, useNavigate, Navigate } from 'react-router-dom';
+import useAuth from '../hooks/useAuth';
 
-export default function SignIn() {
-    const [usernameReg, setUsernameReg] = useState("");
-    const [passwordReg, setPasswordReg] = useState("");
-    const [vorname, setVorname] = useState("");
-    const [nachname, setNachname] = useState("");
-    const [email, setEmail] = useState("");
-    const [telefon, setTelefon] = useState("");
+const Login = () => {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
 
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+    const navigate = useNavigate();
 
-    const [loginStatus, setLoginStatus] = useState("");
+    const { token, setToken } = useAuth();
 
-    const axiosInstance = axios.create({ timeout: 2000, baseURL: "http://localhost:5000", withCredentials: false })
-    /*  const axiosTestInstance = axios.create({ timeout: 2000, baseURL: "https://jsonplaceholder.typicode.com", withCredentials: true }) */
+    const location = useLocation();
+    const from = location.state?.from?.pathname || "/";
 
-    const register = async () => {
+    /*    useEffect(() => {
+         // Überprüfen, ob der Benutzer bereits angemeldet ist
+         if (token && localStorage.getItem("token")) {
+           // Wenn ja, weiterleiten zur Hauptseite
+           navigate('/');
+         }
+       }, [token]); */
+
+
+    const axiosInstance = axios.create({ timeout: 2000, baseURL: "http://localhost:4000", withCredentials: false })
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
         try {
-            const response = await axiosInstance.post("/users", {
-                vorname: usernameReg,
-                nachname: "ziza",
-                email: "ziza@email",
-                telefon: "123123",
-                password: "lksdfldskf",
-            }, {
-              /*   headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': 'http://localhost:5000',
-                }, */
-            });
-            console.log(response);
-        } catch (error) {
-            if (error.response) {
-                // The request was made and the server responded with a status code
-                // that falls out of the range of 2xx
-                console.log(error.response.data);
-                console.log(error.response.status);
-                console.log(error.response.headers);
-            } else if (error.request) {
-                // The request was made but no response was received
-                // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                // http.ClientRequest in node.js
-                console.log(error.request);
+            const token = btoa(`${username}:${password}`);
+            const response = await axiosInstance.post(
+                '/login',
+                {},
+                {
+                    headers: {
+                        Authorization: `Basic ${token}`
+                    }
+                }
+            );
+            console.log("response: " + response.data, response.status); // Erfolgreiche Antwort vom Server
+
+            if (response.status >= 200 && response.status < 300) {
+                localStorage.setItem("expiration", new Date().getTime() + 1000 * 60 * 60 * 24)
+                localStorage.setItem('user', JSON.stringify(response.data.user));
+                localStorage.setItem('token', token);
+
+                setToken(token)
+                navigate(from, { replace: true });
+
             } else {
-                // Something happened in setting up the request that triggered an Error
-                console.log('Error', error.message);
+                // Handle unsuccessful login
+                console.error('Fehler beim Login:', response.status);
+                setError('Fehler beim Login');
             }
+
+
+        } catch (err) {
+            console.error('Fehler beim Login:', err);
+            setError('Fehler beim Login');
         }
     };
 
+    const showAuth = () => {
+        console.log(token)
+    }
 
-    const login = () => {
-        axiosInstance.post("/login", {
-            vorname: username,
-            password: password,
-        }).then((response) => {
-            if (response.data.message) {
-                setLoginStatus(response.data.message);
-            } else {
-                setLoginStatus(response.data[0].vorname);
-            }
-        });
-    };
-
-    /*   const testPost = () => {
-  
-          const postData = {
-              userId: 1,
-              id: 1,
-              title: "ur maman",
-              body: "klsdfsfk"
-          };
-  
-          axiosTestInstance.post('/posts', postData)
-              .then((response) => {
-                  console.log('Erfolgreich gesendet:', response.data);
-              })
-              .catch((error) => {
-                  console.error('Fehler beim Senden der Anfrage:', error);
-              });
-  
-      } */
-
+  /*   if (token) {
+        return <Navigate to="/" />;
+    } */
+ 
     return (
-        <div className="App">
-            <div className="registration">
-                <h1>Registration</h1>
-                <label>Username</label>
-                <input
-                    type="text"
-                    onChange={(e) => {
-                        setUsernameReg(e.target.value);
-                    }}
-                />
-                <label>Password</label>
-                <input
-                    type="text"
-                    onChange={(e) => {
-                        setPasswordReg(e.target.value);
-                    }}
-                />
-                <button onClick={register}> Register </button>
-            </div>
+        <div>
+            <h2>Login</h2>
+            {error && <div>{error}</div>}
+            <form onSubmit={handleLogin}>
+                <div>
+                    <label>Username:</label>
+                    <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+                </div>
+                <div>
+                    <label>Password:</label>
+                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                </div>
+                <button type="submit">Login</button>
+            </form>
 
-            <div className="login">
-                <h1>Login</h1>
-                <input
-                    type="text"
-                    placeholder="Username..."
-                    onChange={(e) => {
-                        setUsername(e.target.value);
-                    }}
-                />
-                <input
-                    type="password"
-                    placeholder="Password..."
-                    onChange={(e) => {
-                        setPassword(e.target.value);
-                    }}
-                />
-                <button onClick={login}> Login </button>
-            </div>
-
-            {/*      <button onClick={testPost}> test </button> */}
-
-            <h1>{loginStatus}</h1>
+            <button type="button" onClick={showAuth}>Show Auth</button>
         </div>
     );
-}
+};
+
+export default Login;

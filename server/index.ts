@@ -5,6 +5,9 @@ import userRouter from './routes/usersRoute'
 import taskRouter from './routes/taskRoute';
 import loginRouter from './routes/loginRoute';
 import taskAssigneeRouter from './routes/taskAssignee';
+import projectTaskRouter from './routes/projectTaskRoute';
+import projectUserRouter from './routes/projectUserRoute';
+import projectRouter from './routes/projectRoute';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { sequelize } from './db/db'
@@ -53,12 +56,13 @@ interface UserRow {
 }
 
 app.use(userRouter);
-
 app.use(loginRouter);
-
 app.use(taskRouter);
-
 app.use(taskAssigneeRouter);
+app.use(projectRouter);
+app.use(projectTaskRouter);
+
+app.use(projectUserRouter);
 
 app.get('/', (req: Request, res: Response) => {
     res.send('Express + TypeScript Server');

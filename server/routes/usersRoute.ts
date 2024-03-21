@@ -5,17 +5,17 @@ import passport from 'passport';
 const userRouter = express.Router();
 
 // Middleware für Passport-Authentifizierung
-const authenticate = passport.authenticate('basic', { session: true });
+/* const authenticate = passport.authenticate('basic', { session: true }); */
 
 userRouter.route("/users")
-    .get(authenticate,getUsers)
+    .get(/* authenticate, */getUsers)
     .post(postUser);
 
 //----------------------- Requests Targetting A Specific User/////////////////////////////////////////////////
 userRouter.route("/users/:id")
-    .get(authenticate, getUser)
-    .put(authenticate, putUser)
-    .delete(authenticate, deleteUser)
+    .get(/* authenticate, */ getUser)
+    .put(/* authenticate,  */putUser)
+    .delete(/* authenticate, */ deleteUser)
 
 export default userRouter;
 
