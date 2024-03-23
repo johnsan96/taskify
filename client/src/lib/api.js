@@ -26,3 +26,34 @@ export async function getUsers(params) {
     throw error;
   }
 }
+
+export async function getProjectUsers() {
+    try {
+      const response = await axiosInstance.get('/projectUsers');
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+  
+  export async function getProjectTasks() {
+    try {
+      const response = await axiosInstance.get('/projectTasks');
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+  
+  
+  export async function getTasks() {
+    try {
+      const response = await axiosInstance.get('/tasks');
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }

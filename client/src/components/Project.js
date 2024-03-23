@@ -4,104 +4,47 @@ import useAuth from '../hooks/useAuth';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Navigate } from "react-router-dom";
 import TaskCreationDialog from './TaskCreationDialog';
-import TaskDetailDialog from './TaskDetailDialog';
+import { useProjectUsers, useProjectTasks, useUsers, useTasks } from '../hooks/useApi';
 import TaskTableRow from './TaskTableRow';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
 function Project() {
-    const navigate = useNavigate();
-    const { token, setToken } = useAuth();
+ 
+    const { token } = useAuth();
     const { id } = useParams();
-    const [user, setUser] = useState();
+   
     const [project, setProject] = useState(null);
-    const [projectUsers, setProjectUsers] = useState([]);
-    const [projectTasks, setProjectTasks] = useState([]);
-    const [users, setUsers] = useState([]);
-    const [tasks, setTasks] = useState([]);
+
     const [isTaskDialogOpen, setTaskDialogOpen] = useState(false);
-    const [isTaskDetailDialogOpen, setTaskDetailDialogOpen] = useState(false);
+
+    const [trackChanges, setTrackChanges] = useState(false);
 
     async function getProject() {
         try {
-            const response = await axios.get(`http://localhost:4000/project/${id}`);
+            const response = await axios.get(`${process.env.REACT_APP_API }/project/${id}`);
             setProject(response.data);
         } catch (error) {
             console.error(error);
         }
     }
 
-    async function getProjectUsers() {
-        try {
-            const response = await axios.get(`http://localhost:4000/projectUsers`);
-            setProjectUsers(response.data);
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    async function getProjectTasks() {
-        try {
-            const response = await axios.get(`http://localhost:4000/projectTasks`);
-            setProjectTasks(response.data);
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    async function getUsers() {
-        try {
-            const response = await axios.get(`http://localhost:4000/users`);
-            setUsers(response.data);
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    async function getTasks() {
-        try {
-            const response = await axios.get(`http://localhost:4000/tasks`);
-            setTasks(response.data);
-        } catch (error) {
-            console.error(error);
-        }
-    }
+    const projectUsers = useProjectUsers();
+    const projectTasks = useProjectTasks({isTaskDialogOpen, trackChanges});
+    const users = useUsers({ role: ''});
+    const tasks = useTasks({isTaskDialogOpen, trackChanges});
 
     const handleOpenTaskDialog = () => {
-        setTaskDialogOpen(true); // Öffne den Dialog
+        setTaskDialogOpen(true); 
     };
 
     const handleCloseTaskDialog = () => {
-        setTaskDialogOpen(false); // Schließe den Dialog
+        setTaskDialogOpen(false); 
     };
 
-
-    const handleOpenTaskDetailDialog = () => {
-        setTaskDetailDialogOpen(true); // Öffne den Dialog
-    };
-
-    const handleCloseTaskDetailDialog = () => {
-        setTaskDetailDialogOpen(false); // Schließe den Dialog
-    };
-
-    const handleLogout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        localStorage.removeItem('expiration');
-        setToken(null);
-        setUser(null);
-        navigate('/login');
-    };
 
     useEffect(() => {
-        Promise.all([getProject(), getProjectUsers(), getProjectTasks(), getUsers(), getTasks()])
-            .then(() => {
-                const user = JSON.parse(localStorage.getItem('user'));
-                if (user?.username) {
-                    setUser(user);
-                }
-            })
-            .catch(error => console.error(error));
-    }, [isTaskDialogOpen]);
+      getProject()
+    }, []);
 
     if (!token || Object.keys(token).length < 1)
         return <Navigate to="/login" />
@@ -138,7 +81,13 @@ function Project() {
                             {projectTasks
                                 .filter(task => task.project_id === Number(id))
                                 .map(task => (
-                                    <TaskTableRow key={task.task_id} task={task} tasks={tasks} />
+                                    <TaskTableRow 
+                                    key={task.task_id} 
+                                    task={task} 
+                                    tasks={tasks}
+                                    setTrack={setTrackChanges}
+                                   
+                                     />
                                 ))}
                         </TableBody>
                     </Table>

@@ -3,7 +3,7 @@ import { TableRow, TableCell } from '@mui/material';
 import TaskDetailDialog from './TaskDetailDialog';
 import axios from 'axios';
 
-function TaskTableRow({ task, tasks }) {
+function TaskTableRow({ task, tasks, setTrack }) {
     const [isTaskDetailDialogOpen, setTaskDetailDialogOpen] = useState(false);
     const [assignees, setAssignees] = useState([]);
 
@@ -15,7 +15,6 @@ function TaskTableRow({ task, tasks }) {
         setTaskDetailDialogOpen(false);
     };
 
-    // Funktion zum Übersetzen des Statuswerts in den entsprechenden String
     const getStatusString = (statusId) => {
         switch (statusId) {
             case 1:
@@ -29,18 +28,18 @@ function TaskTableRow({ task, tasks }) {
         }
     };
 
-  
+
     useEffect(() => {
         async function fetchAssignees() {
             try {
-                const response = await axios.get(`http://localhost:4000/taskAssignees?task_id=${task.task_id}`);
+                const response = await axios.get(`${process.env.REACT_APP_API}/taskAssignees?task_id=${task.task_id}`);
                 const assigneesData = response.data;
                 if (assigneesData.length > 0) {
                     // Extrahiere die Benutzer-IDs aus den Zuweisungsdaten
                     const userIds = assigneesData.map(assignee => assignee.user_id);
                     // Für jede Benutzer-ID die Benutzerdaten abrufen und die Namen speichern
                     const names = await Promise.all(userIds.map(async userId => {
-                        const userResponse = await axios.get(`http://localhost:4000/users/${userId}`);
+                        const userResponse = await axios.get(`${process.env.REACT_APP_API}/users/${userId}`);
                         return userResponse.data.username;
                     }));
                     setAssignees(names);
@@ -64,10 +63,13 @@ function TaskTableRow({ task, tasks }) {
                 </TableCell>
 
                 <TableCell>
-                    {assignees.length > 0 ? assignees.join(', ') : 'Unassigned'} {/* Zeigt die zugewiesenen Benutzer oder "Unassigned" an */}
+                    {assignees.length > 0 ? assignees.join(', ') : 'Unassigned'} 
                 </TableCell>
             </TableRow>
-            <TaskDetailDialog open={isTaskDetailDialogOpen} handleClose={handleCloseTaskDetailDialog} taskId={task.task_id} />
+            <TaskDetailDialog open={isTaskDetailDialogOpen}
+                handleClose={() => { handleCloseTaskDetailDialog(); setTrack(true); }}
+                taskId={task.task_id}
+            />
         </>
     );
 }
