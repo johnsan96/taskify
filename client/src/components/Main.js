@@ -1,103 +1,87 @@
-import axios from 'axios';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import useAuth from '../hooks/useAuth';
-import { useNavigate, Link } from 'react-router-dom';
+import { useProjects, useUsers } from '../hooks/useApi';
+import { useNavigate } from 'react-router-dom';
 import { Navigate } from "react-router-dom";
+import { Card, CardContent, CardHeader, Typography, Grid, Select, MenuItem, InputLabel } from '@mui/material';
 
 function Main() {
 
   const navigate = useNavigate();
-  const { token, setToken } = useAuth();
- /*  const [tasks, settasks] = useState(null); */
-  const [user, setUser] = useState();
+  const { token } = useAuth();
 
-  const [projects, setProjects] = useState(null);
-
- /*  async function gettasks() {
-    try {
-      const response = await axios.get('http://localhost:4000/tasks');
-      console.log(response);
-
-      settasks(response.data)
-    } catch (error) {
-      console.error(error);
-    }
-  } */
-
-  async function getProjects() {
-    try {
-      const response = await axios.get('http://localhost:4000/projects');
-      console.log(response);
-
-      setProjects(response.data)
-    } catch (error) {
-      console.error(error);
-    }
-  } 
-
-
+  const projects = useProjects();
+  const [selectedRole, setSelectedRole] = useState(''); 
+  const users = useUsers({ role: selectedRole, test: "blabli" }); 
   const showAuth = () => {
     console.log(token)
   }
 
-  const handleLogout = () => {
-    // Lösche den Token aus dem Local Storage
-    localStorage.removeItem('token');
-    localStorage.removeItem('user')
-    localStorage.removeItem('expiration')
-    // Setze den Token auf null im AuthContext
-    setToken(null);
-    // Setze den Benutzer auf null
-    setUser(null);
-    // Optional: Weiterleitung zur Login-Seite
-    navigate('/login');
-  };
-
-
-  useEffect(() => {
-    getProjects();
-
-    const user = JSON.parse(localStorage.getItem('user'));
-    if (user?.username) {
-      setUser(user);
-
-      console.log("user: " + user)
-    } else {
-
-      /*   console.log("user existiert nicht")
-        handleLogout() */
-    }
-
-
-  }, [])
+  const user = JSON.parse(localStorage.getItem('user'));
 
   if (!token || Object.keys(token).length < 1)
-
     return (
       <Navigate to="/login" />
     )
 
-
   return (
     <div className="main" style={{ width: '100%' }}>
-      <h1>Taskify</h1>
 
-      <h2> welcome {user?.username}</h2>
+      <h2 className='underline'> Welcome {user?.username}</h2>
 
-      <div className="projects" style={{ width: '50%' }}>
-        <h1>All Projects</h1>
-        {projects && projects.length > 0 && projects.map((project) => (
-          <div key={project.id} style={{ marginBottom: '10px' }}>
-            <Link to={`/project/${project.id}`} style={{ display: 'block' }}>
-              {project.name}  
-            </Link>
-          </div>
-        ))}
+      <div style={{ display: 'flex', gap: 20 }}>
+
+        <div className="projects" style={{ width: '100%', marginTop: '20px' }}>
+          <h2>All Projects</h2>
+          <small>You are running this application in <b>{process.env.REACT_APP_API}</b> mode.</small>
+          <Grid container spacing={2}>
+            {projects && projects.length > 0 && projects.map((project) => (
+              <Grid item xs={12} sm={6} md={4} lg={3} key={project.id}>
+                <Card style={{ backgroundColor: 'black', color: 'white', height: '100%', cursor: 'pointer' }} onClick={() => navigate(`/project/${project.id}`)}>
+                  <CardContent>
+                    <CardHeader
+                      title={project.name}
+                      subheader={`ID: ${project.id}`}
+                      titleTypographyProps={{ variant: 'h5' }}
+                      subheaderTypographyProps={{ variant: 'body2' }}
+                    />
+                    <Typography variant="body1" component="p" style={{ marginBottom: '1rem' }}>
+                      {project.description}
+                    </Typography>
+
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </div>
+
+        <div className="users" style={{ width: '50%' }}>
+          <h2>Members</h2>
+         
+
+          <InputLabel id="role-label">Select Role</InputLabel>
+          <Select value={selectedRole} label={"Rolle"} labelId="role-label" onChange={(e) => setSelectedRole(e.target.value)}>
+            <MenuItem value="">All</MenuItem>
+            <MenuItem value="developer">Developer</MenuItem>
+            <MenuItem value="guest">Guest</MenuItem>
+            <MenuItem value="admin">Admin</MenuItem>
+        
+          </Select>
+
+          {users && users.length > 0 && users.map((user) => (
+            <div key={user.id} style={{ marginBottom: '10px' }}>
+              <p style={{ display: 'block' }}>
+                {user.username + " - "} {user.role ? user.role : "no role"}
+              </p>
+            </div>
+          ))}
+        </div>
+
       </div>
 
-      <button type="button" onClick={showAuth}>Show Auth</button>
+      <button type="button" className="mt-5" onClick={showAuth}>Show Auth</button>
 
-      <button type="button" onClick={handleLogout}>Logout</button>
     </div>
   );
 }

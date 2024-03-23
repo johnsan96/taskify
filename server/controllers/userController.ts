@@ -3,17 +3,24 @@ import bcrypt from 'bcrypt';
 import { db } from '../db/db'
 
 export function getUsers(req: Request, res: Response) {
+    const { role } = req.query; 
 
-        db.all("SELECT * FROM users", (err, rows) => {
-            if (err) {
-                console.error('Fehler bei der Abfrage:', err.message);
-                res.status(500).send('Fehler bei der Datenbankabfrage');
-            } else {
-                console.log('Ergebnis der Abfrage:');
-                console.log(rows);
-                res.send(rows); 
-            }
-        });
+    let query = "SELECT * FROM users";
+
+    if (role) {
+        query += ` WHERE role='${role}'`;
+    }
+
+    db.all(query, (err, rows) => {
+        if (err) {
+            console.error('Fehler bei der Abfrage:', err.message);
+            res.status(500).send('Fehler bei der Datenbankabfrage');
+        } else {
+            console.log('Ergebnis der Abfrage:');
+            console.log(rows);
+            res.send(rows); 
+        }
+    });
 }
 
 export function postUser(req: Request, res: Response) {
@@ -32,8 +39,8 @@ export function postUser(req: Request, res: Response) {
         }
 
         // Das gehashte Passwort in die Datenbank einfügen
-        const sql = 'INSERT INTO users (username, password) VALUES (?, ?)';
-        const values = [newUser.username, hash];
+        const sql = 'INSERT INTO users (username, password, role) VALUES (?, ?, ?)';
+        const values = [newUser.username, hash, newUser.role];
 
         db.run(sql, values, function (err) {
             if (err) {

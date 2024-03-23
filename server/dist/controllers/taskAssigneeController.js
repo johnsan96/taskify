@@ -3,8 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.assignTaskToUser = exports.getTaskAssignees = void 0;
 const taskAssignee_1 = require("../models/taskAssignee");
 async function getTaskAssignees(req, res) {
+    const taskId = req.query.task_id;
     try {
-        const taskAssignees = await taskAssignee_1.TaskAssignee.findAll();
+        const taskAssignees = await taskAssignee_1.TaskAssignee.findAll({ where: { task_id: taskId } });
         res.json(taskAssignees);
     }
     catch (error) {

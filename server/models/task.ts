@@ -15,6 +15,11 @@ export const Task = sequelize.define("task", {
     description: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    status_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false, // Achten Sie darauf, ob Sie NULL-Werte zulassen möchten
+        defaultValue: 1 // Setzen Sie den Standardwert auf 1 oder den Wert, der dem Standardstatus entspricht
     }
 },
 {

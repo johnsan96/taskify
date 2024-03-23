@@ -2,8 +2,9 @@ import { Request, Response } from 'express';
 import { TaskAssignee } from '../models/taskAssignee'; 
 
 export async function getTaskAssignees(req: Request, res: Response) {
+    const taskId = req.query.task_id as string; 
     try {
-        const taskAssignees = await TaskAssignee.findAll();
+        const taskAssignees = await TaskAssignee.findAll({ where: { task_id: taskId } });
         res.json(taskAssignees);
     } catch (error) {
         console.error('Fehler beim Abrufen der Zuweisungen von Aufgaben zu Benutzern:', error);

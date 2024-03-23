@@ -47,14 +47,14 @@ exports.getTask = getTask;
 // Funktion zum Aktualisieren einer Aufgabe anhand der ID
 async function putTask(req, res) {
     const taskId = req.params.id;
-    const { name, description } = req.body;
+    const { name, description, status_id } = req.body;
     try {
         const task = await task_1.Task.findByPk(taskId);
         if (!task) {
             res.status(404).json({ message: 'Aufgabe nicht gefunden' });
             return;
         }
-        await task.update({ name, description });
+        await task.update({ name, description, status_id });
         res.json({ message: 'Aufgabe erfolgreich aktualisiert' });
     }
     catch (error) {

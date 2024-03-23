@@ -7,6 +7,7 @@ import Unauthorized from "./components/Unauthorized";
 import RequireAuth from "./components/RequireAuth";
 import NotFound from "./components/NotFound";
 import Project from "./components/Project";
+import Layout from "./components/Layout";
 
 const App = () => {
 
@@ -33,7 +34,7 @@ const App = () => {
 
   }, [token]);
 
-  
+
 
   return (
 
@@ -42,10 +43,14 @@ const App = () => {
       <Route path="login" element={<SignIn />} />
       <Route path="register" element={<Register />} />
 
-      <Route element={<RequireAuth />}>
-        <Route path="" element={<Main />} />
-        <Route path="project/:id" element={<Project />} />
-        <Route path="*" element={<NotFound />} />
+      <Route path="/" element={<Layout />} >
+
+        <Route element={<RequireAuth />}>
+          <Route path="" element={<Main />} />
+          <Route path="project/:id" element={<Project />} />
+          <Route path="*" element={<NotFound />} />
+        </Route>
+
       </Route>
 
     </Routes>

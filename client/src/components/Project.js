@@ -3,7 +3,10 @@ import React, { useState, useEffect } from 'react';
 import useAuth from '../hooks/useAuth';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Navigate } from "react-router-dom";
-import TaskCreationDialog from './TaskCreationDialog'; // Importiere den Dialog
+import TaskCreationDialog from './TaskCreationDialog';
+import TaskDetailDialog from './TaskDetailDialog';
+import TaskTableRow from './TaskTableRow';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
 function Project() {
     const navigate = useNavigate();
@@ -16,6 +19,7 @@ function Project() {
     const [users, setUsers] = useState([]);
     const [tasks, setTasks] = useState([]);
     const [isTaskDialogOpen, setTaskDialogOpen] = useState(false);
+    const [isTaskDetailDialogOpen, setTaskDetailDialogOpen] = useState(false);
 
     async function getProject() {
         try {
@@ -70,6 +74,15 @@ function Project() {
         setTaskDialogOpen(false); // Schließe den Dialog
     };
 
+
+    const handleOpenTaskDetailDialog = () => {
+        setTaskDetailDialogOpen(true); // Öffne den Dialog
+    };
+
+    const handleCloseTaskDetailDialog = () => {
+        setTaskDetailDialogOpen(false); // Schließe den Dialog
+    };
+
     const handleLogout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
@@ -88,7 +101,7 @@ function Project() {
                 }
             })
             .catch(error => console.error(error));
-    }, []);
+    }, [isTaskDialogOpen]);
 
     if (!token || Object.keys(token).length < 1)
         return <Navigate to="/login" />
@@ -109,21 +122,35 @@ function Project() {
                         ))}
                 </ul>
                 <h2>Project Tasks</h2>
-                <ul>
-                    {projectTasks
-                        .filter(task => task.project_id === Number(id))
-                        .map(task => (
-                            <li key={task.task_id}>
-                                {tasks.find(t => t.id === task.task_id)?.name || 'Unknown Task'}
-                            </li>
-                        ))}
-                </ul>
                 <button type="button" onClick={handleOpenTaskDialog}>Create Task</button> {/* Button zum Öffnen des Dialogs */}
+
+                <TableContainer>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Task Name</TableCell>
+                                <TableCell>Status</TableCell>
+                                <TableCell>Assignee</TableCell>
+                                {/*    <TableCell>Edit</TableCell> */}
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {projectTasks
+                                .filter(task => task.project_id === Number(id))
+                                .map(task => (
+                                    <TaskTableRow key={task.task_id} task={task} tasks={tasks} />
+                                ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
 
 
             </div>
-            <button type="button" onClick={handleLogout}>Logout</button>
-            <TaskCreationDialog open={isTaskDialogOpen} handleClose={handleCloseTaskDialog} />
+
+            <div style={{ marginTop: 20 }}></div>
+         
+         
+            <TaskCreationDialog open={isTaskDialogOpen} handleClose={handleCloseTaskDialog} project_id={id} />
 
         </div>
     );

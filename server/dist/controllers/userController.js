@@ -7,7 +7,12 @@ exports.deleteUser = exports.putUser = exports.getUser = exports.postUser = expo
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const db_1 = require("../db/db");
 function getUsers(req, res) {
-    db_1.db.all("SELECT * FROM users", (err, rows) => {
+    const { role } = req.query;
+    let query = "SELECT * FROM users";
+    if (role) {
+        query += ` WHERE role='${role}'`;
+    }
+    db_1.db.all(query, (err, rows) => {
         if (err) {
             console.error('Fehler bei der Abfrage:', err.message);
             res.status(500).send('Fehler bei der Datenbankabfrage');
@@ -33,8 +38,8 @@ function postUser(req, res) {
             return;
         }
         // Das gehashte Passwort in die Datenbank einfügen
-        const sql = 'INSERT INTO users (username, password) VALUES (?, ?)';
-        const values = [newUser.username, hash];
+        const sql = 'INSERT INTO users (username, password, role) VALUES (?, ?, ?)';
+        const values = [newUser.username, hash, newUser.role];
         db_1.db.run(sql, values, function (err) {
             if (err) {
                 console.error('Fehler beim Einfügen des Benutzers in die Datenbank:', err.message);

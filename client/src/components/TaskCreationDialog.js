@@ -9,14 +9,19 @@ const CustomDialogContent = styled(DialogContent)(({ theme }) => ({
   },
 }));
 
-function TaskCreationDialog({ open, handleClose }) {
+function TaskCreationDialog({ open, handleClose, project_id }) {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
 
   const handleCreateTask = async () => {
     try {
       // Sende Anfrage zum Erstellen des Tasks an die API
-      await axios.post('http://localhost:4000/tasks', { name, description });
+      const response = await axios.post('http://localhost:4000/tasks', { name, description });
+      const taskId = response.data.id; // ID des erstellten Tasks aus der Antwort extrahieren
+  
+      // Zuweisung des Tasks zum Projekt
+      await axios.post('http://localhost:4000/projectTasks', { project_id: project_id, task_id: taskId });
+  
       // Schließe den Dialog
       handleClose();
     } catch (error) {
@@ -24,6 +29,7 @@ function TaskCreationDialog({ open, handleClose }) {
       // Behandlung von Fehlern hier...
     }
   };
+  
 
   return (
     <Dialog open={open} onClose={handleClose}>

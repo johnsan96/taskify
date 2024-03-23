@@ -27,7 +27,11 @@ const port = process.env.PORT;
 app.use((0, cookie_parser_1.default)());
 app.use(body_parser_1.default.json({ limit: '100mb' }));
 app.use(body_parser_1.default.urlencoded({ extended: true }));
-app.use((0, cors_1.default)({ credentials: true }));
+/* app.use(cors({ credentials: true })); */
+app.use((0, cors_1.default)({
+    origin: 'http://localhost:3000',
+    credentials: true
+}));
 app.use(express_1.default.json());
 // Session-Middleware konfigurieren
 app.use((0, express_session_1.default)({
@@ -71,15 +75,18 @@ async function testSequelize() {
 }
 passport_1.default.use(new passport_http_1.BasicStrategy(function (username, password, done) {
     db_2.db.get('SELECT * FROM users WHERE username = ?', [username], (err, row) => {
-        const user = row;
-        const storedHashedPassword = row.password;
         if (err) {
             return done(err);
         }
         if (!row) {
             return done(null, false, { message: 'Incorrect username.' });
         }
-        bcrypt_1.default.compare(password, row.password, (error, result) => {
+        const user = row;
+        const storedHashedPassword = row.password;
+        if (!storedHashedPassword) {
+            return done(null, false, { message: 'Password not found.' });
+        }
+        bcrypt_1.default.compare(password, storedHashedPassword, (error, result) => {
             if (error) {
                 return done(error);
             }

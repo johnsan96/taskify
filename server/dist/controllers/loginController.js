@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.login = void 0;
 const passport_1 = __importDefault(require("passport"));
 function login(req, res, next) {
-    passport_1.default.authenticate('basic', { session: true }, function (err, user, info) {
+    passport_1.default.authenticate('basic' /* ,{ session: true }, */, function (err, user, info) {
         if (err) {
             return next(err);
         }

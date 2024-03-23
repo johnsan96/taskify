@@ -28,7 +28,13 @@ app.use(cookieParser());
 app.use(bodyParser.json({ limit: '100mb' }));
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(cors({ credentials: true }));
+/* app.use(cors({ credentials: true })); */
+
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true
+}));
+
 
 app.use(express.json());
 
@@ -69,11 +75,11 @@ app.get('/', (req: Request, res: Response) => {
     testSequelize();
 });
 
-app.get('/secrets',  passport.authenticate('basic', { session: true }), (req: Request, res: Response) => {
+app.get('/secrets', passport.authenticate('basic', { session: true }), (req: Request, res: Response) => {
     console.log("here is the authentificated user: " + JSON.stringify(req.user));
 
     if (req.isAuthenticated())
-        res.send(JSON.stringify(req.user))  
+        res.send(JSON.stringify(req.user))
     else
         res.send("not authorized")
 
@@ -91,15 +97,16 @@ async function testSequelize() {
 passport.use(new BasicStrategy(
     function (username, password, done) {
         db.get('SELECT * FROM users WHERE username = ?', [username], (err, row: UserRow) => {
-
-            const user = row;
-            const storedHashedPassword = row.password;
-
             if (err) { return done(err); }
             if (!row) {
                 return done(null, false, { message: 'Incorrect username.' });
             }
-            bcrypt.compare(password, row.password, (error, result) => {
+            const user = row;
+            const storedHashedPassword = row.password;
+            if (!storedHashedPassword) {
+                return done(null, false, { message: 'Password not found.' });
+            }
+            bcrypt.compare(password, storedHashedPassword, (error, result) => {
                 if (error) { return done(error); }
                 if (result) {
                     return done(null, user);
@@ -110,6 +117,7 @@ passport.use(new BasicStrategy(
         });
     }
 ));
+
 
 passport.serializeUser(function (user: UserRow, done) {
     console.log("serialize: " + JSON.stringify(user))

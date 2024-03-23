@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useLocation, useNavigate, Navigate } from 'react-router-dom';
+import { useLocation, useNavigate, Navigate, Link } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 
 const Login = () => {
@@ -24,7 +24,7 @@ const Login = () => {
        }, [token]); */
 
 
-    const axiosInstance = axios.create({ timeout: 2000, baseURL: "http://localhost:4000", withCredentials: false })
+    const axiosInstance = axios.create({ timeout: 2000, baseURL: "http://localhost:4000", withCredentials: true })
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -66,10 +66,10 @@ const Login = () => {
         console.log(token)
     }
 
-  /*   if (token) {
-        return <Navigate to="/" />;
-    } */
- 
+    /*   if (token) {
+          return <Navigate to="/" />;
+      } */
+
     return (
         <div>
             <h2>Login</h2>
@@ -85,7 +85,9 @@ const Login = () => {
                 </div>
                 <button type="submit">Login</button>
             </form>
-
+            <Link to={`/register/`} style={{ display: 'block' }}>
+                Registrieren
+            </Link>
             <button type="button" onClick={showAuth}>Show Auth</button>
         </div>
     );

@@ -17,6 +17,11 @@ exports.Task = db_1.sequelize.define("task", {
     description: {
         type: sequelize_1.DataTypes.STRING,
         allowNull: false
+    },
+    status_id: {
+        type: sequelize_1.DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 1 // Setzen Sie den Standardwert auf 1 oder den Wert, der dem Standardstatus entspricht
     }
 }, {
     tableName: 'task',

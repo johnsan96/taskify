@@ -17,6 +17,14 @@ curl -X POST -H "Content-Type: application/json" -d '{"name": "Neuer Task", "des
 
 curl -X PUT -H "Content-Type: application/json" -d '{"name": "Aktualisierter Name", "description": "Aktualisierte Beschreibung"}' http://localhost:4000/tasks/<task_id>
 
+curl -X PUT \
+  http://localhost:4000/tasks/1 \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "status_id": 2
+}'
+
+
 curl -X DELETE http://localhost:4000/tasks/<task_id>
 
 ---------------------------------------------- Task Assignees ---------------------------------------------------------------------------
