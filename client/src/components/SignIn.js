@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import { useLocation, useNavigate, Navigate, Link } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 
 const Login = () => {
@@ -14,14 +14,6 @@ const Login = () => {
 
     const location = useLocation();
     const from = location.state?.from?.pathname || "/";
-
-    /*    useEffect(() => {
-         // Überprüfen, ob der Benutzer bereits angemeldet ist
-         if (token && localStorage.getItem("token")) {
-           // Wenn ja, weiterleiten zur Hauptseite
-           navigate('/');
-         }
-       }, [token]); */
 
 
     const axiosInstance = axios.create({ timeout: 2000, baseURL: "http://localhost:4000", withCredentials: true })
@@ -50,7 +42,7 @@ const Login = () => {
                 navigate(from, { replace: true });
 
             } else {
-                // Handle unsuccessful login
+              
                 console.error('Fehler beim Login:', response.status);
                 setError('Fehler beim Login');
             }
@@ -65,10 +57,6 @@ const Login = () => {
     const showAuth = () => {
         console.log(token)
     }
-
-    /*   if (token) {
-          return <Navigate to="/" />;
-      } */
 
     return (
         <div>

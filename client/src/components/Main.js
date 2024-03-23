@@ -19,10 +19,10 @@ function Main() {
 
   const user = JSON.parse(localStorage.getItem('user'));
 
-  if (!token || Object.keys(token).length < 1)
+/*   if (!token || Object.keys(token).length < 1)
     return (
       <Navigate to="/login" />
-    )
+    ) */
 
   return (
     <div className="main" style={{ width: '100%' }}>

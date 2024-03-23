@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 import { Task } from '../models/task';
+import { ProjectTask } from '../models/projectTask';
+import { TaskAssignee } from '../models/taskAssignee';
 
 // Funktion zum Abrufen aller Aufgaben
 export async function getTasks(req: Request, res: Response) {
@@ -63,6 +65,8 @@ export async function deleteTask(req: Request, res: Response) {
     const taskId = req.params.id;
     try {
         const task = await Task.findByPk(taskId);
+        await ProjectTask.destroy({ where: { task_id: taskId } });
+        await TaskAssignee.destroy({ where: { task_id: taskId } });
         if (!task) {
             res.status(404).json({ message: 'Aufgabe nicht gefunden' });
             return;

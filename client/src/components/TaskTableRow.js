@@ -28,6 +28,16 @@ function TaskTableRow({ task, tasks, setTrack }) {
         }
     };
 
+    const deleteTask = async (taskId) => {
+        try {
+            await axios.delete(`${process.env.REACT_APP_API}/tasks/${taskId}`);
+            setTrack(true);
+        } catch (error) {
+            console.error('Fehler beim Löschen der Aufgabe:', error);
+        }
+    };
+
+
 
     useEffect(() => {
         async function fetchAssignees() {
@@ -63,7 +73,10 @@ function TaskTableRow({ task, tasks, setTrack }) {
                 </TableCell>
 
                 <TableCell>
-                    {assignees.length > 0 ? assignees.join(', ') : 'Unassigned'} 
+                    {assignees.length > 0 ? assignees.join(', ') : 'Unassigned'}
+                </TableCell>
+                <TableCell>
+                    <button onClick={(e) => { e.stopPropagation(); deleteTask(task.task_id); }}>Delete</button>
                 </TableCell>
             </TableRow>
             <TaskDetailDialog open={isTaskDetailDialogOpen}

@@ -2,6 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteTask = exports.putTask = exports.getTask = exports.postTask = exports.getTasks = void 0;
 const task_1 = require("../models/task");
+const projectTask_1 = require("../models/projectTask");
+const taskAssignee_1 = require("../models/taskAssignee");
 // Funktion zum Abrufen aller Aufgaben
 async function getTasks(req, res) {
     try {
@@ -68,6 +70,8 @@ async function deleteTask(req, res) {
     const taskId = req.params.id;
     try {
         const task = await task_1.Task.findByPk(taskId);
+        await projectTask_1.ProjectTask.destroy({ where: { task_id: taskId } });
+        await taskAssignee_1.TaskAssignee.destroy({ where: { task_id: taskId } });
         if (!task) {
             res.status(404).json({ message: 'Aufgabe nicht gefunden' });
             return;

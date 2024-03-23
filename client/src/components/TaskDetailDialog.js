@@ -58,7 +58,7 @@ function TaskDetailDialog({ taskId, open, handleClose }) {
       }
 
       setAssigneeId('');
-
+      
       handleClose();
     } catch (error) {
       console.error('Error updating task:', error);

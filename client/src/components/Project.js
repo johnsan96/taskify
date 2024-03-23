@@ -1,8 +1,7 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import useAuth from '../hooks/useAuth';
-import { useNavigate, useParams } from 'react-router-dom';
-import { Navigate } from "react-router-dom";
+import { useParams } from 'react-router-dom';
 import TaskCreationDialog from './TaskCreationDialog';
 import { useProjectUsers, useProjectTasks, useUsers, useTasks } from '../hooks/useApi';
 import TaskTableRow from './TaskTableRow';
@@ -46,9 +45,6 @@ function Project() {
       getProject()
     }, []);
 
-    if (!token || Object.keys(token).length < 1)
-        return <Navigate to="/login" />
-
     return (
         <div className="main" style={{ width: '100%' }}>
             <div className="projects" style={{ width: '50%' }}>
@@ -65,7 +61,7 @@ function Project() {
                         ))}
                 </ul>
                 <h2>Project Tasks</h2>
-                <button type="button" onClick={handleOpenTaskDialog}>Create Task</button> {/* Button zum Öffnen des Dialogs */}
+                <button type="button" onClick={handleOpenTaskDialog}>Create Task</button> 
 
                 <TableContainer>
                     <Table>
@@ -75,6 +71,7 @@ function Project() {
                                 <TableCell>Status</TableCell>
                                 <TableCell>Assignee</TableCell>
                                 {/*    <TableCell>Edit</TableCell> */}
+                                <TableCell></TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>

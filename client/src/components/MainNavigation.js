@@ -11,15 +11,12 @@ function MainNavigation() {
     const [user, setUser] = useState();
 
     const handleLogout = () => {
-        // Lösche den Token aus dem Local Storage
+      
         localStorage.removeItem('token');
         localStorage.removeItem('user')
         localStorage.removeItem('expiration')
-        // Setze den Token auf null im AuthContext
         setToken(null);
-        // Setze den Benutzer auf null
         setUser(null);
-        // Optional: Weiterleitung zur Login-Seite
         navigate('/login');
       };
 
