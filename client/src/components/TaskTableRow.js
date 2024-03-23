@@ -3,12 +3,13 @@ import { TableRow, TableCell } from '@mui/material';
 import TaskDetailDialog from './TaskDetailDialog';
 import axios from 'axios';
 
-function TaskTableRow({ task, tasks, setTrack }) {
+function TaskTableRow({ task, tasks, setTrack, trackChanges }) {
     const [isTaskDetailDialogOpen, setTaskDetailDialogOpen] = useState(false);
     const [assignees, setAssignees] = useState([]);
 
     const handleOpenTaskDetailDialog = () => {
         setTaskDetailDialogOpen(true);
+        setTrack(false);
     };
 
     const handleCloseTaskDetailDialog = () => {
@@ -45,9 +46,9 @@ function TaskTableRow({ task, tasks, setTrack }) {
                 const response = await axios.get(`${process.env.REACT_APP_API}/taskAssignees?task_id=${task.task_id}`);
                 const assigneesData = response.data;
                 if (assigneesData.length > 0) {
-                    // Extrahiere die Benutzer-IDs aus den Zuweisungsdaten
+                 
                     const userIds = assigneesData.map(assignee => assignee.user_id);
-                    // Für jede Benutzer-ID die Benutzerdaten abrufen und die Namen speichern
+                 
                     const names = await Promise.all(userIds.map(async userId => {
                         const userResponse = await axios.get(`${process.env.REACT_APP_API}/users/${userId}`);
                         return userResponse.data.username;
@@ -60,7 +61,7 @@ function TaskTableRow({ task, tasks, setTrack }) {
         }
 
         fetchAssignees();
-    }, [task.task_id]);
+    }, [task.task_id, trackChanges]);
 
     return (
         <>

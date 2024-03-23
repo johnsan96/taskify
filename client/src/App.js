@@ -9,6 +9,7 @@ import NotFound from "./components/NotFound";
 import Project from "./components/Project";
 import Layout from "./components/Layout";
 import { AuthProvider } from './context/AuthProvider';
+import PublicLayout from "./components/PublicLayout";
 
 const App = () => {
 
@@ -28,8 +29,11 @@ const App = () => {
 
             </Route>
 
-            <Route path="login" element={<SignIn />} />
-            <Route path="register" element={<Register />} />
+            <Route path="/" element={<PublicLayout />}>
+              <Route path="login" element={<SignIn />} />
+              <Route path="register" element={<Register />} />
+
+            </Route>
 
           </Routes>
         </AuthProvider>

@@ -9,7 +9,6 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from
 
 function Project() {
  
-    const { token } = useAuth();
     const { id } = useParams();
    
     const [project, setProject] = useState(null);
@@ -83,6 +82,7 @@ function Project() {
                                     task={task} 
                                     tasks={tasks}
                                     setTrack={setTrackChanges}
+                                    track={trackChanges}
                                    
                                      />
                                 ))}

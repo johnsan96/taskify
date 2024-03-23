@@ -28,3 +28,13 @@ code {
   background-color: black;
   width: '100%';
 }
+
+.site-title {
+  color: white
+}
+
+.nav-link,
+.logout-button {
+    color: white;
+    font-weight: bold;
+}

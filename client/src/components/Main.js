@@ -11,18 +11,13 @@ function Main() {
   const { token } = useAuth();
 
   const projects = useProjects();
-  const [selectedRole, setSelectedRole] = useState(''); 
-  const users = useUsers({ role: selectedRole, test: "blabli" }); 
+  const [selectedRole, setSelectedRole] = useState('');
+  const users = useUsers({ role: selectedRole, test: "blabli" });
   const showAuth = () => {
     console.log(token)
   }
 
   const user = JSON.parse(localStorage.getItem('user'));
-
-/*   if (!token || Object.keys(token).length < 1)
-    return (
-      <Navigate to="/login" />
-    ) */
 
   return (
     <div className="main" style={{ width: '100%' }}>
@@ -58,7 +53,7 @@ function Main() {
 
         <div className="users" style={{ width: '50%' }}>
           <h2>Members</h2>
-         
+
 
           <InputLabel id="role-label">Select Role</InputLabel>
           <Select value={selectedRole} label={"Rolle"} labelId="role-label" onChange={(e) => setSelectedRole(e.target.value)}>
@@ -66,7 +61,7 @@ function Main() {
             <MenuItem value="developer">Developer</MenuItem>
             <MenuItem value="guest">Guest</MenuItem>
             <MenuItem value="admin">Admin</MenuItem>
-        
+
           </Select>
 
           {users && users.length > 0 && users.map((user) => (
