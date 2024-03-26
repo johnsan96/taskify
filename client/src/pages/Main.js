@@ -3,7 +3,7 @@ import useAuth from '../hooks/useAuth';
 import { useProjects, useUsers } from '../hooks/useApi';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, Typography, Grid, Select, MenuItem, InputLabel, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
-import ProjectCreationDialog from './ProjectCreationDialog';
+import ProjectCreationDialog from '../dialog/ProjectCreationDialog';
 
 function Main() {
   const navigate = useNavigate();

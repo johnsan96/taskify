@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
-import TaskCreationDialog from './TaskCreationDialog';
+import TaskCreationDialog from '../dialog/TaskCreationDialog';
 import { useProjectUsers, useProjectTasks, useUsers, useTasks } from '../hooks/useApi';
-import TaskTableRow from './TaskTableRow';
+import TaskTableRow from '../components/TaskTableRow';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, Dialog,DialogTitle, DialogContent, DialogActions } from '@mui/material';
 
 function Project() {
@@ -156,12 +156,12 @@ function Project() {
                 </DialogActions>
             </Dialog>
             
-            <div className='profile-card'>
+          {/*   <div className='profile-card'>
                 <p>NOW WATCHING AS:</p>
                 <p>ID: {user.id}</p>
                 <p>Name: {user.username}</p>
                 <p>Role: {user.role}</p>
-            </div>
+            </div> */}
         </div>
     );
 }

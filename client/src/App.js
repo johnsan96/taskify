@@ -1,16 +1,16 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import Main from './components/Main';
-import SignIn from "./components/SignIn";
-import Register from "./components/Register";
-import Unauthorized from "./components/Unauthorized";
+import Main from './pages/Main';
+import SignIn from "./pages/SignIn";
+import Register from "./pages/Register";
+import Unauthorized from "./pages/Unauthorized";
 import RequireAuth from "./components/RequireAuth";
-import NotFound from "./components/NotFound";
-import Project from "./components/Project";
+import NotFound from "./pages/NotFound";
+import Project from "./pages/Project";
 import Layout from "./components/Layout";
 import { AuthProvider } from './context/AuthProvider';
 import PublicLayout from "./components/PublicLayout";
-import Profile from "./components/Profile";
+import Profile from "./pages/Profile";
 
 const App = () => {
 

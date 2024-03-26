@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TableRow, TableCell, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
-import TaskDetailDialog from './TaskDetailDialog';
+import TaskDetailDialog from '../dialog/TaskDetailDialog';
 import axios from 'axios';
 
 function TaskTableRow({ task, tasks, setTrack, trackChanges, projectUsers }) {

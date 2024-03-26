@@ -3,9 +3,8 @@ import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import useAuth from '../hooks/useAuth';
 
-function PublicNavbar() {
+function PublicNavigation() {
     const navigate = useNavigate();
-
 
     return (
         <header className="main-header">
@@ -19,4 +18,4 @@ function PublicNavbar() {
     );
 }
 
-export default PublicNavbar;
+export default PublicNavigation;
