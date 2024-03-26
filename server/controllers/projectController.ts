@@ -2,6 +2,8 @@
 
 import { Request, Response } from 'express';
 import { Project } from '../models/project';
+import { ProjectUser } from '../models/projectUsers';
+import { ProjectTask } from '../models/projectTask';
 
 // Funktion zum Abrufen aller Projekte
 export async function getAllProjects(req: Request, res: Response) {
@@ -44,6 +46,8 @@ export async function createProject(req: Request, res: Response) {
 export async function deleteProject(req: Request, res: Response) {
     const { id } = req.params;
     try {
+        await ProjectTask.destroy({ where: { project_id: id } });
+        await ProjectUser.destroy({ where: { project_id: id } });
         await Project.destroy({
             where: {
                 id: id
@@ -61,6 +65,7 @@ export async function updateProject(req: Request, res: Response) {
     const { id } = req.params;
     const { name, description } = req.body;
     try {
+
         await Project.update({ name, description }, {
             where: {
                 id: id

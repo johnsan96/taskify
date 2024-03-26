@@ -10,6 +10,7 @@ import Project from "./components/Project";
 import Layout from "./components/Layout";
 import { AuthProvider } from './context/AuthProvider';
 import PublicLayout from "./components/PublicLayout";
+import Profile from "./components/Profile";
 
 const App = () => {
 
@@ -25,6 +26,7 @@ const App = () => {
                 <Route path="/" element={<Main />} />
                 <Route path="project/:id" element={<Project />} />
                 <Route path="*" element={<NotFound />} />
+                <Route path="profile" element={<Profile />} />
               </Route>
 
             </Route>

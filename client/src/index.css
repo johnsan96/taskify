@@ -38,3 +38,23 @@ code {
     color: white;
     font-weight: bold;
 }
+
+.nav-link-dropdown {
+  color: black;
+  font-weight: bold;
+}
+
+.profile-card {
+  border: 2px solid #333; /* Border-Stil und Farbe */
+  padding: 20px; /* Innenabstand */
+  border-radius: 8px; /* Abrundung der Ecken */
+  background-color: #f9f9f9; /* Hintergrundfarbe */
+  margin-bottom: 10px;
+  width: '50%';
+}
+
+.profile-card p {
+  margin: 8px 0; /* Außenabstand oben und unten */
+  font-size: 16px; /* Schriftgröße */
+  color: #333; /* Textfarbe */
+}

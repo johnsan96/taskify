@@ -3,6 +3,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateProject = exports.deleteProject = exports.createProject = exports.getProjectById = exports.getAllProjects = void 0;
 const project_1 = require("../models/project");
+const projectUsers_1 = require("../models/projectUsers");
+const projectTask_1 = require("../models/projectTask");
 // Funktion zum Abrufen aller Projekte
 async function getAllProjects(req, res) {
     try {
@@ -47,6 +49,8 @@ exports.createProject = createProject;
 async function deleteProject(req, res) {
     const { id } = req.params;
     try {
+        await projectTask_1.ProjectTask.destroy({ where: { project_id: id } });
+        await projectUsers_1.ProjectUser.destroy({ where: { project_id: id } });
         await project_1.Project.destroy({
             where: {
                 id: id

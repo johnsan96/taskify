@@ -60,7 +60,7 @@ export async function putTask(req: Request, res: Response) {
     }
 }
 
-// Funktion zum Löschen einer Aufgabe anhand der ID
+
 export async function deleteTask(req: Request, res: Response) {
     const taskId = req.params.id;
     try {

@@ -1,17 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getProjects, getProjectUsers, getProjectTasks, getUsers, getTasks } from '../lib/api';
 
-export function useProjects() {
-    const [projects, setProjects] = useState(null);
-
-    useEffect(() => {
-        getProjects()
-            .then(data => setProjects(data))
-            .catch(error => console.error(error));
-    }, []);
-
-    return projects;
-}
 
 export function useUsers({  role = '', test }) {
     const [users, setUsers] = useState([]);
@@ -25,14 +14,27 @@ export function useUsers({  role = '', test }) {
     return users;
 }
 
-export function useProjectUsers() {
+export function useProjects(trackChanges) {
+    const [projects, setProjects] = useState(null);
+
+    useEffect(() => {
+        getProjects()
+            .then(data => setProjects(data))
+            .catch(error => console.error(error));
+    }, [trackChanges]);
+
+    return projects;
+}
+
+
+export function useProjectUsers({trackChanges}) {
     const [projectUsers, setProjectUsers] = useState([]);
 
     useEffect(() => {
         getProjectUsers()
             .then(data => setProjectUsers(data))
             .catch(error => console.error(error));
-    }, []);
+    }, [trackChanges]);
 
     return projectUsers;
 }

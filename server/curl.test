@@ -49,6 +49,8 @@ curl -X POST -H "Content-Type: application/json" -d '{"project_id": 1, "user_id"
 
 curl http://localhost:4000/projects
 
-curl -X POST -H "Content-Type: application/json" -d '{"name": "Neues Projekt", "description": "Beschreibung des neuen Projekts"}' http://localhost:4000/projects
+curl -X POST -H "Content-Type: application/json" -d '{"name": "anderer Projekt", "description": "Beschreibung des sdf Projekts"}' http://localhost:4000/projects
 
 curl http://localhost:4000/project/1
+
+curl -X DELETE http://localhost:4000/project/<id>t

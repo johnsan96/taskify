@@ -1,24 +1,31 @@
 import React, { useState } from 'react';
-import { NavLink } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { NavLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
-import { Typography, Button } from '@mui/material';
+import { Typography, Button, Menu, MenuItem } from '@mui/material';
+import { useProjects } from '../hooks/useApi';
 
 function MainNavigation() {
     const navigate = useNavigate();
+    const { setToken } = useAuth();
+    const [anchorEl, setAnchorEl] = useState(null);
 
-    const { token, setToken } = useAuth();
-
-    const [user, setUser] = useState();
+    const projects = useProjects();
 
     const handleLogout = () => {
-
         localStorage.removeItem('token');
-        localStorage.removeItem('user')
-        localStorage.removeItem('expiration')
+        localStorage.removeItem('user');
+        localStorage.removeItem('expiration');
         setToken(null);
-        setUser(null);
         navigate('/login');
+    };
+
+    const handleMenuOpen = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
     };
 
     return (
@@ -32,26 +39,47 @@ function MainNavigation() {
                     </Typography>
                     <ul className="nav nav-pills mt-4 d-flex flex-row align-self-center">
                         <li className="nav-item me-2">
-                            <NavLink to="/" className="nav-link" end>
+                            <Button component={NavLink} to="/" activeClassName="active" className="nav-link" end>
                                 Dashboard
-                            </NavLink>
+                            </Button>
                         </li>
                         <li className="nav-item me-2">
-                            <NavLink to="/board" className="nav-link" >
-                                Board
-                            </NavLink>
+                            <Button onClick={handleMenuOpen} className="nav-link">
+                                Projects
+                            </Button>
+                            <Menu
+                                anchorEl={anchorEl}
+                                open={Boolean(anchorEl)}
+                                onClose={handleMenuClose}
+                                anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                                transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+                                getContentAnchorEl={null}
+                            >
+                                {projects?.map((project) => (
+                                    <MenuItem key={project.id} onClick={handleMenuClose}>
+                                        <NavLink to={`/project/${project.id}`} className="nav-link-dropdown">
+                                            {project.name}
+                                        </NavLink>
+                                    </MenuItem>
+                                ))}
+                            </Menu>
                         </li>
                         <li className="nav-item me-2">
-                            <NavLink to="/about" className="nav-link">
-                                About
-                            </NavLink>
+                            <Button component={NavLink} to="/profile" activeClassName="active" className="nav-link">
+                                Profile
+                            </Button>
+                        </li>
+                        <li className="nav-item me-2">
+                            <Button component={NavLink} to="/people" activeClassName="active" className="nav-link">
+                                People
+                            </Button>
                         </li>
                     </ul>
                 </div>
                 <div className="nav nav-pills mt-4 d-flex flex-row align-self-center">
-                    <button onClick={handleLogout} className="btn btn-primary">
-                        <i className="bi bi-box-arrow-left"></i> Ausloggen
-                    </button>
+                    <Button onClick={handleLogout} className="btn btn-primary">
+                        <i className="bi bi-box-arrow-left"></i> Logout
+                    </Button>
                 </div>
             </nav>
         </header>
