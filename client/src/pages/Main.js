@@ -29,7 +29,7 @@ function Main() {
     console.log(trackChanges)
   }, [trackChanges])
 
-  const projects = useProjects(trackChanges); 
+  const projects = useProjects(trackChanges);
 
   const user = JSON.parse(localStorage.getItem('user'));
 
@@ -37,10 +37,14 @@ function Main() {
     <div className="main" style={{ width: '100%' }}>
       <h2 className='underline'> Welcome {user?.username}</h2>
 
-      <div style={{ display: 'flex', gap: 20 }}>
+      <div style={{ display: 'flex', gap: 20, marginBottom: '5rem' }}>
         <div className="projects" style={{ width: '100%', marginTop: '20px' }}>
           <h2>All Projects</h2>
-          <small>You are running this application in <b>{process.env.REACT_APP_API}</b> mode.</small>
+          {/*  <small>You are running this application in <b>{process.env.REACT_APP_API}</b> mode.</small> */}
+
+          <Button variant="contained" color="primary" onClick={handleCreateProjectDialogOpen} style={{ marginTop: '20px', marginBottom: '20px' }}>
+            Create Project
+          </Button>
           <Grid container spacing={2}>
             {projects && projects.length > 0 && projects.map((project) => (
               <Grid item xs={12} sm={6} md={4} lg={3} key={project.id}>
@@ -57,12 +61,12 @@ function Main() {
                     </Typography>
                   </CardContent>
                 </Card>
+
               </Grid>
+
             ))}
           </Grid>
-          <Button variant="contained" color="primary" onClick={handleCreateProjectDialogOpen} style={{ marginTop: '20px' }}>
-            Create Project
-          </Button>
+
         </div>
 
         <div className="users" style={{ width: '50%' }}>
@@ -84,7 +88,7 @@ function Main() {
         </div>
       </div>
 
-      <button type="button" className="mt-5" onClick={() => console.log(token)}>Show Auth</button>
+      {/*    <button type="button" className="mt-5" onClick={() => console.log(token)}>Show Auth</button> */}
       <ProjectCreationDialog open={openCreateProjectDialog} handleClose={handleCreateProjectDialogClose} setTrackChanges={setTrackChanges} />
 
     </div>

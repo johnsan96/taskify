@@ -11,6 +11,7 @@ import Layout from "./components/Layout";
 import { AuthProvider } from './context/AuthProvider';
 import PublicLayout from "./components/PublicLayout";
 import Profile from "./pages/Profile";
+import People from "./pages/People";
 
 const App = () => {
 
@@ -27,6 +28,7 @@ const App = () => {
                 <Route path="project/:id" element={<Project />} />
                 <Route path="*" element={<NotFound />} />
                 <Route path="profile" element={<Profile />} />
+                <Route path="people" element={<People />} />
               </Route>
 
             </Route>
