@@ -8,9 +8,11 @@ services:
       - ./server:/usr/src/app
       - ./task.db:/usr/src/app/db/task.db  # Pfad zur SQLite-Datei auf Host und im Container
     ports:
-      - "5000:5000"
+      - "4000:4000"
     environment:
       - NODE_ENV=production
+    env_file:
+      - ./server/.env    
     command: npm start
 
   frontend:
@@ -22,7 +24,8 @@ services:
       - /usr/src/app/node_modules
     ports:
       - "3000:3000"
+    env_file:
+      - ./client/.env    
     environment:
-      - NODE_ENV=production
-    command: npm start
+      - NODE_ENV=development
 
