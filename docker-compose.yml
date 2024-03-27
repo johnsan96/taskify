@@ -1,0 +1,31 @@
+version: '3.3'
+services:
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    volumes:
+      - ./server:/usr/src/app
+      - ./task.db:/usr/src/app/db/task.db  # Pfad zur SQLite-Datei auf Host und im Container
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=production
+    env_file:
+      - ./server/.env    
+    command: npm start
+
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    volumes:
+      - ./client:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./client/.env    
+    environment:
+      - NODE_ENV=development
+

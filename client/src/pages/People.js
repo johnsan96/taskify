@@ -15,12 +15,12 @@ function People() {
     const user = JSON.parse(localStorage.getItem('user'));
 
     const users = useUsers({ role: '' });
-
+    
     return (
         <div className="main" style={{ width: '100%', display: 'flex', gap: 20 }}>
             <div className="projects" style={{ width: '60%' }}>
                 <h2>CEO</h2>
-
+                <h2>lkdsfjldsf</h2>
                 <Grid container spacing={2}>
                     {users && users.length > 0 && users.filter(user => user.role === 'admin').map((project) => (
                         <Grid item xs={12} sm={6} md={4} lg={3} key={project.id}>
