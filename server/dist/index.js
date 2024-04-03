@@ -54,7 +54,7 @@ app.use(projectRoute_1.default);
 app.use(projectTaskRoute_1.default);
 app.use(projectUserRoute_1.default);
 app.get('/', (req, res) => {
-    res.send('Express + TypeScript Server');
+    res.send('Express + TypeScript Server + SQLite + React -> http://localhost:3000/ :)');
     testSequelize();
 });
 app.get('/secrets', (req, res) => {
