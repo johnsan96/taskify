@@ -18,14 +18,16 @@ export const handleLogin = async (username, password) => {
                 }
             }
         );
+        /* await axiosInstance.get('/secrets') */
         if (response.status >= 200 && response.status < 300) {
             localStorage.setItem('expiration', new Date().getTime() + 1000 * 60 * 60 * 24);
             localStorage.setItem('user', JSON.stringify(response.data.user));
-            localStorage.setItem('token', token);
             return token;
         } else {
             throw new Error('Fehler beim Login');
         }
+
+      
     } catch (error) {
         throw error;
     }

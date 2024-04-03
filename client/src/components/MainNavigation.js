@@ -4,15 +4,26 @@ import { useNavigate } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 import { Typography, Button, Menu, MenuItem } from '@mui/material';
 import { useProjects } from '../hooks/useApi';
+import axios from 'axios';
 
 function MainNavigation() {
+
+    const API_URL = process.env.REACT_APP_API /* || 'http://localhost:4000' */;
+
+    const axiosInstance = axios.create({
+        baseURL: API_URL,
+        withCredentials: true
+    });
+
+
     const navigate = useNavigate();
     const { setToken } = useAuth();
     const [anchorEl, setAnchorEl] = useState(null);
 
     const projects = useProjects();
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        await axiosInstance.post('/logout', null);
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         localStorage.removeItem('expiration');

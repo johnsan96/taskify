@@ -43,11 +43,11 @@ app.use(session({
     secret: 'geheimesGeheimnis', // Geheimnis zur Signierung von Session-Cookies
     resave: false,
     saveUninitialized: false, // Legt fest, ob eine "leere" Sitzung auch dann gespeichert wird, wenn sie nicht modifiziert wurde
-    /*   cookie: {
-          path: '/',
-          httpOnly: false,
-          maxAge: 24 * 60 * 60 * 1000
-      }, */
+    cookie: {
+        /*  path: '/',
+         httpOnly: false, */
+        maxAge: 24 * 60 * 60 * 1000
+    },
 }));
 
 app.use(passport.initialize());
@@ -94,7 +94,6 @@ async function testSequelize() {
     }
 }
 
-
 app.post('/logout', function (req, res, next) {
     req.logout(function (err) {
         if (err) { return next(err); }
@@ -133,7 +132,7 @@ passport.use(new BasicStrategy(
 
 passport.serializeUser(function (user: UserRow, done) {
     console.log("serialize: " + JSON.stringify(user))
-    done(null, user); // Nur die ID des Benutzers in der Session speichern
+    done(null, user.id); // Nur die ID des Benutzers in der Session speichern
 });
 
 passport.deserializeUser(function (id, done) {

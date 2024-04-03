@@ -37,12 +37,12 @@ app.use(express_1.default.json());
 app.use((0, express_session_1.default)({
     secret: 'geheimesGeheimnis',
     resave: false,
-    saveUninitialized: false, // Legt fest, ob eine "leere" Sitzung auch dann gespeichert wird, wenn sie nicht modifiziert wurde
-    /*   cookie: {
-          path: '/',
-          httpOnly: false,
-          maxAge: 24 * 60 * 60 * 1000
-      }, */
+    saveUninitialized: false,
+    cookie: {
+        /*  path: '/',
+         httpOnly: false, */
+        maxAge: 24 * 60 * 60 * 1000
+    },
 }));
 app.use(passport_1.default.initialize());
 app.use(passport_1.default.session());
@@ -114,7 +114,7 @@ passport_1.default.use(new passport_http_1.BasicStrategy(function (username, pas
 }));
 passport_1.default.serializeUser(function (user, done) {
     console.log("serialize: " + JSON.stringify(user));
-    done(null, user); // Nur die ID des Benutzers in der Session speichern
+    done(null, user.id); // Nur die ID des Benutzers in der Session speichern
 });
 passport_1.default.deserializeUser(function (id, done) {
     console.log('Deserialize User called with id:', id);
