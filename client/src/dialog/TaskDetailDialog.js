@@ -23,7 +23,7 @@ function TaskDetailDialog({ taskId, open, handleClose, projectUsers }) {
 
   const fetchAvailableUsers = async () => {
     try {
-      const response = await axios.get(`${apiUrl}/users`);
+      const response = await axios.get(`${apiUrl}/users`, {withCredentials: true});
       const assignedUsersResponse = await axios.get(`${apiUrl}/taskAssignees?task_id=${taskId}`);
 
       const assignedUserIds = assignedUsersResponse.data.map(taskAssignee => taskAssignee.user_id);
