@@ -57,12 +57,13 @@ app.get('/', (req, res) => {
     res.send('Express + TypeScript Server');
     testSequelize();
 });
-app.get('/secrets', passport_1.default.authenticate('basic', { session: true }), (req, res) => {
+app.get('/secrets', (req, res) => {
     console.log("here is the authentificated user: " + JSON.stringify(req.user));
+    console.log(req.session);
     if (req.isAuthenticated())
         res.send(JSON.stringify(req.user));
     else
-        res.send("not authorized");
+        res.status(401).send("not authorized");
 });
 async function testSequelize() {
     try {
@@ -73,6 +74,18 @@ async function testSequelize() {
         console.error('Unable to connect to the database:', error);
     }
 }
+app.post('/logout', function (req, res, next) {
+    req.logout(function (err) {
+        if (err) {
+            return next(err);
+        }
+        req.session.destroy((err) => {
+            res.clearCookie('connect.sid');
+            // Don't redirect, just print text
+            res.send('Logged out');
+        });
+    });
+});
 passport_1.default.use(new passport_http_1.BasicStrategy(function (username, password, done) {
     db_2.db.get('SELECT * FROM users WHERE username = ?', [username], (err, row) => {
         if (err) {

@@ -7,7 +7,8 @@ exports.db = exports.sequelize = void 0;
 const sqlite3_1 = __importDefault(require("sqlite3"));
 const sequelize_1 = require("sequelize");
 // Pfad zur SQLite-Datenbankdatei
-const dbPath = "/usr/src/app/db/task.db";
+/* const dbPath = "/usr/src/app/db/task.db" */
+const dbPath = "/home/john/Dokumente/projects/taskify/task.db";
 exports.sequelize = new sequelize_1.Sequelize({
     dialect: 'sqlite',
     storage: dbPath

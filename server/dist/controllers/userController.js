@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteUser = exports.putUser = exports.getUser = exports.postUser = exports.getUsers = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const db_1 = require("../db/db");
+/** lkdsf */
 function getUsers(req, res) {
     const { role } = req.query;
     let query = "SELECT * FROM users";

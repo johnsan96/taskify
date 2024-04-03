@@ -75,13 +75,13 @@ app.get('/', (req: Request, res: Response) => {
     testSequelize();
 });
 
-app.get('/secrets', passport.authenticate('basic', { session: true }), (req: Request, res: Response) => {
+app.get('/secrets', (req: Request, res: Response) => {
     console.log("here is the authentificated user: " + JSON.stringify(req.user));
-
+    console.log(req.session)
     if (req.isAuthenticated())
         res.send(JSON.stringify(req.user))
     else
-        res.send("not authorized")
+        res.status(401).send("not authorized")
 
 });
 
@@ -93,6 +93,18 @@ async function testSequelize() {
         console.error('Unable to connect to the database:', error);
     }
 }
+
+
+app.post('/logout', function (req, res, next) {
+    req.logout(function (err) {
+        if (err) { return next(err); }
+        req.session.destroy((err) => {
+            res.clearCookie('connect.sid');
+            // Don't redirect, just print text
+            res.send('Logged out');
+        });
+    });
+});
 
 passport.use(new BasicStrategy(
     function (username, password, done) {

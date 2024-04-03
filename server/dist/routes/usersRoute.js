@@ -5,11 +5,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const userController_1 = require("../controllers/userController");
+const isAuth_1 = require("../middleware/isAuth");
 const userRouter = express_1.default.Router();
 // Middleware für Passport-Authentifizierung
-/* const authenticate = passport.authenticate('basic', { session: true }); */
+/* const authenticate = passport.authenticate('basic'); */
 userRouter.route("/users")
-    .get(/* authenticate, */ userController_1.getUsers)
+    .get(isAuth_1.ensureAuthenticated, userController_1.getUsers)
     .post(userController_1.postUser);
 //----------------------- Requests Targetting A Specific User/////////////////////////////////////////////////
 userRouter.route("/users/:id")
