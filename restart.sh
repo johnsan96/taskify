@@ -1,7 +1,7 @@
 #!/bin/bash
 
-docker-compose stop
-docker-compose up -d
+docker compose stop
+docker compose up -d
 
 # Docker-Container-ID des Containers mit dem Namen "taskify_backend" erhalten
 container_id=$(docker ps -qf "name=taskify_backend")
