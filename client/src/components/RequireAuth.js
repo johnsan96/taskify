@@ -3,6 +3,8 @@ import useAuth from "../hooks/useAuth";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+import AuthContext from "../context/AuthProvider";
+
 
 /** https://stackoverflow.com/questions/51109559/get-cookie-with-react */
 
@@ -15,6 +17,7 @@ const RequireAuth = () => {
         withCredentials: true
     });
 
+    /* const { token, setToken } = useContext(AuthContext);  */
     const { token, setToken } = useAuth();
     const [isLoading, setIsLoading] = useState(true);
     const location = useLocation();
